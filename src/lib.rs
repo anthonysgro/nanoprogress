@@ -480,7 +480,10 @@ mod tests {
         bar.set_message("hello");
         bar.tick(1);
         let out = tw.output();
-        assert!(out.contains("hello"), "set_message should update displayed text");
+        assert!(
+            out.contains("hello"),
+            "set_message should update displayed text"
+        );
     }
 
     #[test]
@@ -489,7 +492,10 @@ mod tests {
         let bar = ProgressBar::new(10).writer(w).tty(true).start();
         bar.success("completed");
         let out = tw.output();
-        assert!(out.contains("\x1b[32m"), "TTY success should have green ANSI code");
+        assert!(
+            out.contains("\x1b[32m"),
+            "TTY success should have green ANSI code"
+        );
         assert!(out.contains("✔"), "TTY success should have checkmark");
         assert!(out.contains("completed"));
     }
@@ -500,7 +506,10 @@ mod tests {
         let bar = ProgressBar::new(10).writer(w).tty(true).start();
         bar.fail("broken");
         let out = tw.output();
-        assert!(out.contains("\x1b[31m"), "TTY fail should have red ANSI code");
+        assert!(
+            out.contains("\x1b[31m"),
+            "TTY fail should have red ANSI code"
+        );
         assert!(out.contains("✖"), "TTY fail should have cross mark");
         assert!(out.contains("broken"));
     }
@@ -513,7 +522,10 @@ mod tests {
         let out_after_first = tw.output();
         bar.fail("second");
         let out_after_second = tw.output();
-        assert_eq!(out_after_first, out_after_second, "double finalization should be a no-op");
+        assert_eq!(
+            out_after_first, out_after_second,
+            "double finalization should be a no-op"
+        );
     }
 
     #[test]
@@ -523,7 +535,6 @@ mod tests {
         let s = bar.state.lock().unwrap();
         assert_eq!(s.total, 1, "total of 0 should be normalized to 1");
     }
-
 
     // --- Property tests using quickcheck! macro ---
 
