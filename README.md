@@ -5,7 +5,9 @@
 
 A minimal, zero-dependency terminal progress bar for Rust CLI applications.
 
-Inspired by the [nanospinner](https://github.com/usmanyunusov/nanospinner) npm package and its Rust port, `nanoprogress` gives you a lightweight determinate progress bar using only the Rust standard library — no heavy crates, no transitive dependencies, under 300 lines of code.
+![demo](demo.gif)
+
+Inspired by the [nanospinner](https://github.com/anthonysgro/nanospinner) package, `nanoprogress` gives you a lightweight determinate progress bar using only the Rust standard library — no heavy crates, no transitive dependencies, under 300 lines of code.
 
 ## Motivation
 
