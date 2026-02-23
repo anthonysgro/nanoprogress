@@ -1,7 +1,4 @@
-# ██░░ nanoprogress
-
-[![Crates.io](https://img.shields.io/crates/v/nanoprogress)](https://crates.io/crates/nanoprogress)
-[![Docs.rs](https://docs.rs/nanoprogress/badge.svg)](https://docs.rs/nanoprogress/latest/nanoprogress/)
+# ██░░ nanoprogress [![Build Status](https://github.com/anthonysgro/nanoprogress/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anthonysgro/nanoprogress/actions) [![Crates.io](https://img.shields.io/crates/v/nanoprogress)](https://crates.io/crates/nanoprogress) [![Docs.rs](https://docs.rs/nanoprogress/badge.svg)](https://docs.rs/nanoprogress/latest/nanoprogress/) [![Coverage Status](https://coveralls.io/repos/github/anthonysgro/nanoprogress/badge.svg?branch=main)](https://coveralls.io/github/anthonysgro/nanoprogress?branch=main) [![License](https://img.shields.io/crates/l/nanoprogress)](https://crates.io/crates/nanoprogress)
 
 A minimal, zero-dependency terminal progress bar for Rust CLI applications.
 
