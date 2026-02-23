@@ -1,6 +1,6 @@
 # ██░░ nanoprogress [![Build Status](https://github.com/anthonysgro/nanoprogress/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anthonysgro/nanoprogress/actions) [![Crates.io](https://img.shields.io/crates/v/nanoprogress)](https://crates.io/crates/nanoprogress) [![Docs.rs](https://docs.rs/nanoprogress/badge.svg)](https://docs.rs/nanoprogress/latest/nanoprogress/) [![Coverage Status](https://coveralls.io/repos/github/anthonysgro/nanoprogress/badge.svg?branch=main)](https://coveralls.io/github/anthonysgro/nanoprogress?branch=main) [![License](https://img.shields.io/crates/l/nanoprogress)](https://crates.io/crates/nanoprogress)
 
-A minimal, zero-dependency terminal progress bar for Rust CLI applications.
+A minimal, zero-dependency terminal progress bar for Rust applications.
 
 ![demo](demo.gif)
 
@@ -8,7 +8,7 @@ Inspired by the [nanospinner](https://github.com/anthonysgro/nanospinner) packag
 
 ## Nano Crate Family
 
-Part of the nano crate family — minimal, zero-dependency building blocks for CLI apps in Rust:
+Part of the nano crate family — minimal, zero-dependency building blocks for focused apps in Rust:
 
 - [nanocolor](https://github.com/anthonysgro/nanocolor) — terminal colors and styles
 - [nanospinner](https://github.com/anthonysgro/nanospinner) — terminal spinners
