@@ -1,3 +1,32 @@
+//! A minimal, zero-dependency terminal progress bar for Rust CLI applications.
+//!
+//! # Quick Start
+//!
+//! ```no_run
+//! use nanoprogress::ProgressBar;
+//! use std::thread;
+//! use std::time::Duration;
+//!
+//! let bar = ProgressBar::new(100)
+//!     .message("Downloading...")
+//!     .start();
+//!
+//! for _ in 0..100 {
+//!     thread::sleep(Duration::from_millis(30));
+//!     bar.tick(1);
+//! }
+//! bar.success("Download complete");
+//! ```
+//!
+//! # Features
+//!
+//! - Zero external dependencies
+//! - Thread-safe (`Send + Sync`) — clone and share across threads
+//! - Automatic TTY detection — ANSI codes are skipped when output is piped
+//! - Customizable bar width, fill/empty characters, and messages
+//! - Clean finalization with colored `✔` / `✖` symbols
+//! - Automatic cleanup via `Drop`
+
 use std::io::{self, Write};
 use std::sync::{Arc, Mutex};
 
@@ -103,6 +132,21 @@ fn is_stdout_tty() -> bool {
 
 // --- Builder ---
 
+/// Builder for configuring and starting a [`ProgressBar`].
+///
+/// Created via [`ProgressBar::new`]. Chain configuration methods and call
+/// [`.start()`](ProgressBarBuilder::start) to begin rendering.
+///
+/// ```no_run
+/// use nanoprogress::ProgressBar;
+///
+/// let bar = ProgressBar::new(100)
+///     .width(30)
+///     .fill('#')
+///     .empty('-')
+///     .message("Working...")
+///     .start();
+/// ```
 pub struct ProgressBarBuilder {
     total: u64,
     config: BarConfig,
@@ -112,36 +156,44 @@ pub struct ProgressBarBuilder {
 }
 
 impl ProgressBarBuilder {
+    /// Set the width of the bar track in characters. Default: 40.
     pub fn width(mut self, width: usize) -> Self {
         self.config.width = width;
         self
     }
 
+    /// Set the fill character for completed progress. Default: `█`.
     pub fn fill(mut self, ch: char) -> Self {
         self.config.fill = ch;
         self
     }
 
+    /// Set the empty character for remaining progress. Default: `░`.
     pub fn empty(mut self, ch: char) -> Self {
         self.config.empty = ch;
         self
     }
 
+    /// Set an initial message displayed after the count.
     pub fn message(mut self, msg: &str) -> Self {
         self.message = msg.to_string();
         self
     }
 
+    /// Direct output to a custom writer instead of stdout.
+    /// Custom writers default to non-TTY mode unless overridden with [`.tty(true)`](ProgressBarBuilder::tty).
     pub fn writer(mut self, writer: Box<dyn Write + Send>) -> Self {
         self.writer = Some(writer);
         self
     }
 
+    /// Explicitly set TTY mode, overriding auto-detection.
     pub fn tty(mut self, is_tty: bool) -> Self {
         self.tty_override = Some(is_tty);
         self
     }
 
+    /// Build and start the progress bar, rendering the initial state immediately.
     pub fn start(self) -> ProgressBar {
         let total = if self.total == 0 { 1 } else { self.total };
         let has_custom_writer = self.writer.is_some();
@@ -173,11 +225,28 @@ impl ProgressBarBuilder {
 
 // --- ProgressBar ---
 
+/// A thread-safe terminal progress bar.
+///
+/// Create one via the builder API:
+///
+/// ```no_run
+/// use nanoprogress::ProgressBar;
+///
+/// let bar = ProgressBar::new(100).start();
+/// bar.tick(10);
+/// bar.success("Done");
+/// ```
+///
+/// `ProgressBar` is `Clone`, `Send`, and `Sync` — clone it to share across threads.
+/// When the last reference is dropped without finalization, a newline is written
+/// to leave the terminal in a clean state.
 pub struct ProgressBar {
     state: Arc<Mutex<ProgressBarState>>,
 }
 
 impl ProgressBar {
+    /// Create a new builder with the given total.
+    /// A total of 0 is normalized to 1 to avoid division by zero.
     #[allow(clippy::new_ret_no_self)]
     pub fn new(total: u64) -> ProgressBarBuilder {
         ProgressBarBuilder {
@@ -189,6 +258,8 @@ impl ProgressBar {
         }
     }
 
+    /// Increment progress by `amount`, clamped to the total. Re-renders the bar.
+    /// No-op if the bar has been finalized.
     pub fn tick(&self, amount: u64) {
         let mut s = self.state.lock().unwrap();
         if s.finished {
@@ -198,16 +269,19 @@ impl ProgressBar {
         s.render();
     }
 
+    /// Update the displayed message. Takes effect on the next render.
     pub fn set_message(&self, msg: &str) {
         let mut s = self.state.lock().unwrap();
         s.message = msg.to_string();
     }
 
+    /// Finalize with a green `✔` and the given message. Stops further ticks.
     pub fn success(&self, msg: &str) {
         let mut s = self.state.lock().unwrap();
         s.finalize("✔", "\x1b[32m", msg);
     }
 
+    /// Finalize with a red `✖` and the given message. Stops further ticks.
     pub fn fail(&self, msg: &str) {
         let mut s = self.state.lock().unwrap();
         s.finalize("✖", "\x1b[31m", msg);

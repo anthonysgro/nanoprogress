@@ -9,6 +9,16 @@ A minimal, zero-dependency terminal progress bar for Rust CLI applications.
 
 Inspired by the [nanospinner](https://github.com/anthonysgro/nanospinner) package, `nanoprogress` gives you a lightweight determinate progress bar using only the Rust standard library — no heavy crates, no transitive dependencies, under 300 lines of code.
 
+## Nano Crate Family
+
+Part of the nano crate family — minimal, zero-dependency building blocks for CLI apps in Rust:
+
+- [nanocolor](https://github.com/anthonysgro/nanocolor) — terminal colors and styles
+- [nanospinner](https://github.com/anthonysgro/nanospinner) — terminal spinners
+- [nanoprogress](https://github.com/anthonysgro/nanoprogress) — progress bars
+- [nanologger](https://github.com/anthonysgro/nanologger) — minimal logger
+- [nanotime](https://github.com/anthonysgro/nanotime) — time utilities
+
 ## Motivation
 
 Most Rust progress bar crates (like `indicatif`) are feature-rich but pull in multiple dependencies, increasing compile times and binary size. If all you need is a simple progress bar with a count, percentage, and success/failure states, those crates are overkill.
@@ -49,11 +59,8 @@ Build times measured from a clean `cargo build --release` on macOS aarch64 (Appl
 
 ## Quick Start
 
-Add `nanoprogress` to your `Cargo.toml`:
-
-```toml
-[dependencies]
-nanoprogress = "0.1.0"
+```bash
+cargo add nanoprogress
 ```
 
 ```rust
