@@ -463,6 +463,68 @@ mod tests {
         assert_send_sync::<ProgressBar>();
     }
 
+    #[test]
+    fn test_fill_and_empty_builder_methods() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(10).writer(w).fill('#').empty('-').start();
+        bar.tick(5);
+        let out = tw.output();
+        assert!(out.contains('#'), "custom fill char should appear");
+        assert!(out.contains('-'), "custom empty char should appear");
+    }
+
+    #[test]
+    fn test_set_message_updates_output() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(10).writer(w).start();
+        bar.set_message("hello");
+        bar.tick(1);
+        let out = tw.output();
+        assert!(out.contains("hello"), "set_message should update displayed text");
+    }
+
+    #[test]
+    fn test_tty_finalize_success_has_ansi() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(10).writer(w).tty(true).start();
+        bar.success("completed");
+        let out = tw.output();
+        assert!(out.contains("\x1b[32m"), "TTY success should have green ANSI code");
+        assert!(out.contains("✔"), "TTY success should have checkmark");
+        assert!(out.contains("completed"));
+    }
+
+    #[test]
+    fn test_tty_finalize_fail_has_ansi() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(10).writer(w).tty(true).start();
+        bar.fail("broken");
+        let out = tw.output();
+        assert!(out.contains("\x1b[31m"), "TTY fail should have red ANSI code");
+        assert!(out.contains("✖"), "TTY fail should have cross mark");
+        assert!(out.contains("broken"));
+    }
+
+    #[test]
+    fn test_double_finalization_is_noop() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(10).writer(w).tty(true).start();
+        bar.success("first");
+        let out_after_first = tw.output();
+        bar.fail("second");
+        let out_after_second = tw.output();
+        assert_eq!(out_after_first, out_after_second, "double finalization should be a no-op");
+    }
+
+    #[test]
+    fn test_total_zero_normalized_to_one() {
+        let (tw, w) = make_writer();
+        let bar = ProgressBar::new(0).writer(w).start();
+        let s = bar.state.lock().unwrap();
+        assert_eq!(s.total, 1, "total of 0 should be normalized to 1");
+    }
+
+
     // --- Property tests using quickcheck! macro ---
 
     use quickcheck::quickcheck;
