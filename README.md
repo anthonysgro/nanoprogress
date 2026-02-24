@@ -4,17 +4,9 @@ A minimal, zero-dependency terminal progress bar for Rust applications.
 
 ![demo](demo.gif)
 
+Part of the [nano](https://github.com/anthonysgro/nano) crate family — minimal, zero-dependency building blocks for Rust.
+
 Inspired by the [nanospinner](https://github.com/anthonysgro/nanospinner) package, `nanoprogress` gives you a lightweight determinate progress bar using only the Rust standard library — no heavy crates, no transitive dependencies, under 300 lines of code.
-
-## Nano Crate Family
-
-Part of the nano crate family — minimal, zero-dependency building blocks for focused apps in Rust:
-
-- [nanocolor](https://github.com/anthonysgro/nanocolor) — terminal colors and styles
-- [nanospinner](https://github.com/anthonysgro/nanospinner) — terminal spinners
-- [nanoprogress](https://github.com/anthonysgro/nanoprogress) — progress bars
-- [nanologger](https://github.com/anthonysgro/nanologger) — minimal logger
-- [nanotime](https://github.com/anthonysgro/nanotime) — time utilities
 
 ## Motivation
 
